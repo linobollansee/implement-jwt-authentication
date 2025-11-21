@@ -1,0 +1,170 @@
+### JWT Authentication API Tests
+### Base URL
+@baseUrl = http://localhost:3000
+
+### Variables (Update these after registration/login)
+@token = YOUR_JWT_TOKEN_HERE
+@userId = 1
+@quoteId = 1
+
+###############################################
+# Authentication Endpoints
+###############################################
+
+### Register a new user (Public)
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "role": "user"
+}
+
+### Register an admin user (Public)
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "admin"
+}
+
+### Login (Public)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Login as regular user (Public)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+###############################################
+# User Endpoints
+###############################################
+
+### Get all users (Requires Admin)
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
+### Get all users with limit (Requires Admin)
+GET {{baseUrl}}/users?limit=5
+Authorization: Bearer {{token}}
+
+### Get user by ID (Requires Authentication)
+GET {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+
+### Update user (Requires Admin)
+PUT {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "updated@example.com",
+  "password": "newpassword123"
+}
+
+### Update user role (Requires Admin)
+PUT {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "role": "admin"
+}
+
+### Delete user (Requires Admin)
+DELETE {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+
+###############################################
+# Quote Endpoints
+###############################################
+
+### Get all quotes (Public)
+GET {{baseUrl}}/quotes
+
+### Get all quotes with limit (Public)
+GET {{baseUrl}}/quotes?limit=5
+
+### Get quotes by author (Public)
+GET {{baseUrl}}/quotes?author=Einstein
+
+### Get quote by ID (Public)
+GET {{baseUrl}}/quotes/{{quoteId}}
+
+### Create quote (Requires Authentication - User or Admin)
+POST {{baseUrl}}/quotes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "The only way to do great work is to love what you do.",
+  "author": "Steve Jobs"
+}
+
+### Create another quote (Requires Authentication)
+POST {{baseUrl}}/quotes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "Be yourself; everyone else is already taken.",
+  "author": "Oscar Wilde"
+}
+
+### Update quote (Requires Admin)
+PUT {{baseUrl}}/quotes/{{quoteId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "Updated quote text",
+  "author": "Updated Author"
+}
+
+### Delete quote (Requires Admin)
+DELETE {{baseUrl}}/quotes/{{quoteId}}
+Authorization: Bearer {{token}}
+
+###############################################
+# Error Test Cases
+###############################################
+
+### Unauthorized - No token
+GET {{baseUrl}}/users
+
+### Unauthorized - Invalid token
+GET {{baseUrl}}/users
+Authorization: Bearer invalid_token
+
+### Forbidden - User trying to access admin endpoint
+# First login as user, then try to access admin endpoint
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+### Conflict - Duplicate email
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}

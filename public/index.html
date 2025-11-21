@@ -1,0 +1,754 @@
+<!-- HTML5 document type declaration / HTML5-Dokumenttyp-Deklaration -->
+<!DOCTYPE html>
+<!-- HTML root element with English language / HTML-Wurzelelement mit englischer Sprache -->
+<html lang="en">
+  <head>
+    <!-- Character encoding for the document / Zeichenkodierung für das Dokument -->
+    <meta charset="UTF-8" />
+    <!-- Viewport settings for responsive design / Viewport-Einstellungen für responsives Design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Page title shown in browser tab / Seitentitel im Browser-Tab angezeigt -->
+    <title>Quote API - User Interface</title>
+    <!-- Internal CSS styles / Interne CSS-Stile -->
+    <style>
+      /* Universal selector - reset default margins and paddings / Universalselektor - Standard-Margins und -Paddings zurücksetzen */
+      * {
+        margin: 0; /* Remove default margins / Standard-Margins entfernen */
+        padding: 0; /* Remove default padding / Standard-Padding entfernen */
+        box-sizing: border-box; /* Include padding and border in element's total width and height / Padding und Border in Gesamtbreite und -höhe einbeziehen */
+      }
+
+      /* Body styles - main page styling / Body-Stile - Hauptseiten-Styling */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Font stack for text / Schriftarten-Stack für Text */
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 100%
+        ); /* Purple gradient background / Lila Verlaufshintergrund */
+        min-height: 100vh; /* Minimum height of viewport / Mindesthöhe des Viewports */
+        padding: 20px; /* Inner spacing / Innerer Abstand */
+      }
+
+      /* Main container for content / Hauptcontainer für Inhalt */
+      .container {
+        max-width: 1200px; /* Maximum width / Maximale Breite */
+        margin: 0 auto; /* Center horizontally / Horizontal zentrieren */
+        background: white; /* White background / Weißer Hintergrund */
+        border-radius: 15px; /* Rounded corners / Abgerundete Ecken */
+        padding: 30px; /* Inner spacing / Innerer Abstand */
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); /* Shadow effect / Schatteneffekt */
+      }
+
+      /* Main heading style / Hauptüberschrift-Stil */
+      h1 {
+        color: #667eea; /* Purple color / Lila Farbe */
+        margin-bottom: 10px; /* Bottom spacing / Unterer Abstand */
+        text-align: center; /* Center text / Text zentrieren */
+      }
+
+      /* Section heading style / Abschnittsüberschrift-Stil */
+      h2 {
+        color: #764ba2; /* Dark purple color / Dunkel-lila Farbe */
+        margin: 30px 0 15px; /* Top, right/left, bottom margins / Oberer, rechter/linker, unterer Abstand */
+        padding-bottom: 10px; /* Bottom padding / Unteres Padding */
+        border-bottom: 2px solid #667eea; /* Bottom border / Unterer Rahmen */
+      }
+
+      /* Authentication section container / Authentifizierungs-Abschnitt-Container */
+      .auth-section {
+        background: #f8f9fa; /* Light gray background / Hellgrauer Hintergrund */
+        padding: 20px; /* Inner spacing / Innerer Abstand */
+        border-radius: 10px; /* Rounded corners / Abgerundete Ecken */
+        margin-bottom: 30px; /* Bottom spacing / Unterer Abstand */
+      }
+
+      /* Status indicator styles / Status-Indikator-Stile */
+      .status {
+        padding: 10px; /* Inner spacing / Innerer Abstand */
+        border-radius: 5px; /* Rounded corners / Abgerundete Ecken */
+        margin-bottom: 20px; /* Bottom spacing / Unterer Abstand */
+        text-align: center; /* Center text / Text zentrieren */
+        font-weight: bold; /* Bold text / Fetter Text */
+      }
+
+      /* Logged out status style / Abgemeldet-Status-Stil */
+      .status.logged-out {
+        background: #ffe5e5; /* Light red background / Hellroter Hintergrund */
+        color: #c92a2a; /* Red text / Roter Text */
+      }
+
+      /* Logged in status style / Angemeldet-Status-Stil */
+      .status.logged-in {
+        background: #d3f9d8; /* Light green background / Hellgrüner Hintergrund */
+        color: #2b8a3e; /* Green text / Grüner Text */
+      }
+
+      /* Form group container / Formulargruppen-Container */
+      .form-group {
+        margin-bottom: 15px; /* Bottom spacing / Unterer Abstand */
+      }
+
+      /* Label style / Label-Stil */
+      label {
+        display: block; /* Block display / Block-Anzeige */
+        margin-bottom: 5px; /* Bottom spacing / Unterer Abstand */
+        color: #495057; /* Dark gray text / Dunkelgrauer Text */
+        font-weight: 500; /* Medium font weight / Mittlere Schriftstärke */
+      }
+
+      /* Input and textarea fields / Eingabe- und Textbereichsfelder */
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="number"],
+      textarea {
+        width: 100%; /* Full width / Volle Breite */
+        padding: 10px; /* Inner spacing / Innerer Abstand */
+        border: 2px solid #e9ecef; /* Light gray border / Hellgrauer Rahmen */
+        border-radius: 5px; /* Rounded corners / Abgerundete Ecken */
+        font-size: 14px; /* Font size / Schriftgröße */
+        transition: border-color 0.3s; /* Smooth border color transition / Sanfter Rahmenfarben-Übergang */
+      }
+
+      /* Input focus state / Eingabe-Fokus-Zustand */
+      input:focus,
+      textarea:focus {
+        outline: none; /* Remove default outline / Standard-Umriss entfernen */
+        border-color: #667eea; /* Purple border when focused / Lila Rahmen bei Fokus */
+      }
+
+      /* Textarea specific styles / Textbereich-spezifische Stile */
+      textarea {
+        resize: vertical; /* Only vertical resizing / Nur vertikale Größenänderung */
+        min-height: 80px; /* Minimum height / Mindesthöhe */
+      }
+
+      /* Button base styles / Button-Basis-Stile */
+      button {
+        background: #667eea; /* Purple background / Lila Hintergrund */
+        color: white; /* White text / Weißer Text */
+        border: none; /* No border / Kein Rahmen */
+        padding: 12px 24px; /* Vertical and horizontal padding / Vertikales und horizontales Padding */
+        border-radius: 5px; /* Rounded corners / Abgerundete Ecken */
+        cursor: pointer; /* Pointer cursor on hover / Zeiger-Cursor beim Hover */
+        font-size: 14px; /* Font size / Schriftgröße */
+        font-weight: 500; /* Medium font weight / Mittlere Schriftstärke */
+        transition: background 0.3s; /* Smooth background transition / Sanfter Hintergrund-Übergang */
+        margin-right: 10px; /* Right spacing / Rechter Abstand */
+      }
+
+      /* Button hover state / Button-Hover-Zustand */
+      button:hover {
+        background: #5568d3; /* Darker purple on hover / Dunkleres Lila beim Hover */
+      }
+
+      /* Secondary button style / Sekundärer Button-Stil */
+      button.secondary {
+        background: #764ba2; /* Dark purple background / Dunkel-lila Hintergrund */
+      }
+
+      /* Secondary button hover state / Sekundärer Button-Hover-Zustand */
+      button.secondary:hover {
+        background: #63408a; /* Darker purple on hover / Dunkleres Lila beim Hover */
+      }
+
+      /* Danger button style / Gefahren-Button-Stil */
+      button.danger {
+        background: #c92a2a; /* Red background / Roter Hintergrund */
+      }
+
+      /* Danger button hover state / Gefahren-Button-Hover-Zustand */
+      button.danger:hover {
+        background: #a61e1e; /* Darker red on hover / Dunkleres Rot beim Hover */
+      }
+
+      /* Items list container / Elementlisten-Container */
+      .items-list {
+        margin-top: 20px; /* Top spacing / Oberer Abstand */
+      }
+
+      /* Individual item style / Einzelelementstil */
+      .item {
+        background: #f8f9fa; /* Light gray background / Hellgrauer Hintergrund */
+        padding: 15px; /* Inner spacing / Innerer Abstand */
+        border-radius: 8px; /* Rounded corners / Abgerundete Ecken */
+        margin-bottom: 15px; /* Bottom spacing / Unterer Abstand */
+        border-left: 4px solid #667eea; /* Left purple border / Linker lila Rahmen */
+      }
+
+      /* Item heading style / Elementüberschrift-Stil */
+      .item h3 {
+        color: #495057; /* Dark gray text / Dunkelgrauer Text */
+        margin-bottom: 8px; /* Bottom spacing / Unterer Abstand */
+      }
+
+      /* Item paragraph style / Elementabsatz-Stil */
+      .item p {
+        color: #6c757d; /* Medium gray text / Mittelgrauer Text */
+        margin-bottom: 5px; /* Bottom spacing / Unterer Abstand */
+      }
+
+      /* Item actions container / Elementaktionen-Container */
+      .item-actions {
+        margin-top: 10px; /* Top spacing / Oberer Abstand */
+      }
+
+      /* Item action buttons / Elementaktions-Buttons */
+      .item-actions button {
+        padding: 8px 16px; /* Smaller padding / Kleineres Padding */
+        font-size: 12px; /* Smaller font / Kleinere Schrift */
+      }
+
+      /* Grid layout for two columns / Rasterlayout für zwei Spalten */
+      .grid {
+        display: grid; /* Grid display / Raster-Anzeige */
+        grid-template-columns: 1fr 1fr; /* Two equal columns / Zwei gleiche Spalten */
+        gap: 20px; /* Space between columns / Abstand zwischen Spalten */
+        margin-bottom: 20px; /* Bottom spacing / Unterer Abstand */
+      }
+
+      /* Responsive design for mobile / Responsives Design für Mobilgeräte */
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr; /* Single column on mobile / Einzelne Spalte auf Mobilgeräten */
+        }
+      }
+
+      /* Message notification styles / Nachrichtenmeldungs-Stile */
+      .message {
+        padding: 12px; /* Inner spacing / Innerer Abstand */
+        border-radius: 5px; /* Rounded corners / Abgerundete Ecken */
+        margin-bottom: 15px; /* Bottom spacing / Unterer Abstand */
+        animation: fadeIn 0.3s; /* Fade in animation / Einblend-Animation */
+      }
+
+      /* Success message style / Erfolgsnachricht-Stil */
+      .message.success {
+        background: #d3f9d8; /* Light green background / Hellgrüner Hintergrund */
+        color: #2b8a3e; /* Green text / Grüner Text */
+      }
+
+      /* Error message style / Fehlernachricht-Stil */
+      .message.error {
+        background: #ffe5e5; /* Light red background / Hellroter Hintergrund */
+        color: #c92a2a; /* Red text / Roter Text */
+      }
+
+      /* Fade in animation keyframes / Einblend-Animations-Keyframes */
+      @keyframes fadeIn {
+        from {
+          opacity: 0; /* Start transparent / Starttransparent */
+          transform: translateY(
+            -10px
+          ); /* Start 10px above / 10px darüber starten */
+        }
+        to {
+          opacity: 1; /* End fully visible / Ende vollständig sichtbar */
+          transform: translateY(
+            0
+          ); /* End at normal position / Ende an normaler Position */
+        }
+      }
+
+      /* Hidden class to hide elements / Versteckte Klasse zum Ausblenden von Elementen */
+      .hidden {
+        display: none; /* Do not display / Nicht anzeigen */
+      }
+    </style>
+  </head>
+  <!-- Body starts here / Body beginnt hier -->
+  <body>
+    <!-- Main container div / Hauptcontainer-Div -->
+    <div class="container">
+      <!-- Main page heading with emoji / Hauptseitenüberschrift mit Emoji -->
+      <h1>📚 Quote API Management</h1>
+      <!-- Subtitle paragraph / Untertitel-Absatz -->
+      <p style="text-align: center; color: #6c757d; margin-bottom: 30px">
+        Manage quotes and users with JWT authentication
+        <!-- Verwalten Sie Zitate und Benutzer mit JWT-Authentifizierung -->
+      </p>
+
+      <!-- Authentication Section / Authentifizierungs-Abschnitt -->
+      <!-- Container for authentication UI / Container für Authentifizierungs-UI -->
+      <div class="auth-section">
+        <!-- Authentication status display / Authentifizierungsstatus-Anzeige -->
+        <div id="authStatus" class="status logged-out">
+          Not Authenticated - Please login or register
+          <!-- Nicht authentifiziert - Bitte anmelden oder registrieren -->
+        </div>
+
+        <!-- Login section (visible when logged out) / Anmeldeabschnitt (sichtbar wenn abgemeldet) -->
+        <div id="loginSection">
+          <!-- Login heading / Anmeldeüberschrift -->
+          <h2>🔐 Login</h2>
+          <!-- Grid layout for login and register forms / Rasterlayout für Anmelde- und Registrierungsformulare -->
+          <div class="grid">
+            <!-- Login form column / Anmeldeformular-Spalte -->
+            <div>
+              <!-- Email input group / E-Mail-Eingabegruppe -->
+              <div class="form-group">
+                <label for="loginEmail">Email:</label>
+                <!-- Email input field / E-Mail-Eingabefeld -->
+                <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="user@example.com"
+                />
+              </div>
+              <!-- Password input group / Passwort-Eingabegruppe -->
+              <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <!-- Password input field / Passwort-Eingabefeld -->
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Your password"
+                />
+              </div>
+              <!-- Login button calls login() function / Anmelde-Button ruft login()-Funktion auf -->
+              <button onclick="login()">Login</button>
+            </div>
+
+            <!-- Register form column / Registrierungsformular-Spalte -->
+            <div>
+              <!-- Register heading / Registrierungsüberschrift -->
+              <h3 style="margin-bottom: 10px">👤 Register New User</h3>
+              <!-- Email input group for registration / E-Mail-Eingabegruppe für Registrierung -->
+              <div class="form-group">
+                <label for="registerEmail">Email:</label>
+                <!-- Email input field / E-Mail-Eingabefeld -->
+                <input
+                  type="email"
+                  id="registerEmail"
+                  placeholder="user@example.com"
+                />
+              </div>
+              <!-- Password input group for registration / Passwort-Eingabegruppe für Registrierung -->
+              <div class="form-group">
+                <label for="registerPassword">Password:</label>
+                <!-- Password input field / Passwort-Eingabefeld -->
+                <input
+                  type="password"
+                  id="registerPassword"
+                  placeholder="Choose a password"
+                />
+              </div>
+              <!-- Register button calls register() function / Registrierungs-Button ruft register()-Funktion auf -->
+              <button onclick="register()" class="secondary">Register</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logout section (visible when logged in) / Abmeldeabschnitt (sichtbar wenn angemeldet) -->
+        <div id="logoutSection" class="hidden">
+          <!-- Logout button calls logout() function / Abmelde-Button ruft logout()-Funktion auf -->
+          <button onclick="logout()" class="danger">Logout</button>
+        </div>
+      </div>
+
+      <!-- Message area for notifications / Nachrichtenbereich für Benachrichtigungen -->
+      <div id="messageArea"></div>
+
+      <!-- Quotes Section / Zitate-Abschnitt -->
+      <section>
+        <!-- Section heading / Abschnittsüberschrift -->
+        <h2>💬 Quotes</h2>
+        <!-- Quote text input group / Zitattext-Eingabegruppe -->
+        <div class="form-group">
+          <label for="quoteText">Quote Text:</label>
+          <!-- Textarea for quote text / Textbereich für Zitattext -->
+          <textarea id="quoteText" placeholder="Enter quote text..."></textarea>
+        </div>
+        <!-- Author input group / Autor-Eingabegruppe -->
+        <div class="form-group">
+          <label for="quoteAuthor">Author:</label>
+          <!-- Text input for author name / Texteingabe für Autorennamen -->
+          <input type="text" id="quoteAuthor" placeholder="Author name" />
+        </div>
+        <!-- Button to create new quote / Button zum Erstellen eines neuen Zitats -->
+        <button onclick="createQuote()">Create Quote</button>
+        <!-- Button to refresh quotes list / Button zum Aktualisieren der Zitatliste -->
+        <button onclick="loadQuotes()" class="secondary">Refresh Quotes</button>
+
+        <!-- Container for quotes list / Container für Zitatliste -->
+        <div id="quotesList" class="items-list"></div>
+      </section>
+
+      <!-- Users Section / Benutzer-Abschnitt -->
+      <!-- Hidden by default, shown when authenticated / Standardmäßig versteckt, angezeigt wenn authentifiziert -->
+      <section id="usersSection" class="hidden">
+        <!-- Section heading / Abschnittsüberschrift -->
+        <h2>👥 Users</h2>
+        <!-- Button to load users list / Button zum Laden der Benutzerliste -->
+        <button onclick="loadUsers()">Load Users</button>
+
+        <!-- Container for users list / Container für Benutzerliste -->
+        <div id="usersList" class="items-list"></div>
+      </section>
+    </div>
+
+    <!-- JavaScript code starts here / JavaScript-Code beginnt hier -->
+    <script>
+      // API base URL constant / API-Basis-URL-Konstante
+      const API_BASE = "http://localhost:3000";
+      // Get JWT token from localStorage / JWT-Token aus localStorage abrufen
+      let token = localStorage.getItem("token");
+      // Get current user from localStorage and parse JSON / Aktuellen Benutzer aus localStorage abrufen und JSON parsen
+      let currentUser = JSON.parse(localStorage.getItem("user") || "null");
+
+      // Update UI based on authentication status / UI basierend auf Authentifizierungsstatus aktualisieren
+      function updateAuthUI() {
+        // Get DOM elements / DOM-Elemente abrufen
+        const loginSection = document.getElementById("loginSection");
+        const logoutSection = document.getElementById("logoutSection");
+        const authStatus = document.getElementById("authStatus");
+        const usersSection = document.getElementById("usersSection");
+
+        // Check if user is authenticated / Prüfen, ob Benutzer authentifiziert ist
+        if (token) {
+          // Hide login section / Anmeldeabschnitt ausblenden
+          loginSection.classList.add("hidden");
+          // Show logout section / Abmeldeabschnitt anzeigen
+          logoutSection.classList.remove("hidden");
+          // Show users section / Benutzerabschnitt anzeigen
+          usersSection.classList.remove("hidden");
+          // Update status to logged in / Status auf angemeldet aktualisieren
+          authStatus.className = "status logged-in";
+          // Display logged in message with user email / Angemeldet-Nachricht mit Benutzer-E-Mail anzeigen
+          authStatus.textContent = `✅ Logged in as: ${
+            currentUser?.email || "User"
+          }`;
+        } else {
+          // Show login section / Anmeldeabschnitt anzeigen
+          loginSection.classList.remove("hidden");
+          // Hide logout section / Abmeldeabschnitt ausblenden
+          logoutSection.classList.add("hidden");
+          // Hide users section / Benutzerabschnitt ausblenden
+          usersSection.classList.add("hidden");
+          // Update status to logged out / Status auf abgemeldet aktualisieren
+          authStatus.className = "status logged-out";
+          // Display not authenticated message / Nicht-authentifiziert-Nachricht anzeigen
+          authStatus.textContent =
+            "Not Authenticated - Please login or register";
+        }
+      }
+
+      // Show message to user / Nachricht an Benutzer anzeigen
+      function showMessage(message, type = "success") {
+        // Get message area element / Nachrichtenbereich-Element abrufen
+        const messageArea = document.getElementById("messageArea");
+        // Create new div element / Neues Div-Element erstellen
+        const div = document.createElement("div");
+        // Set CSS class for styling / CSS-Klasse für Styling setzen
+        div.className = `message ${type}`;
+        // Set message text / Nachrichtentext setzen
+        div.textContent = message;
+        // Append to message area / An Nachrichtenbereich anhängen
+        messageArea.appendChild(div);
+
+        // Remove message after 5 seconds / Nachricht nach 5 Sekunden entfernen
+        setTimeout(() => {
+          div.remove();
+        }, 5000);
+      }
+
+      // Register new user / Neuen Benutzer registrieren
+      async function register() {
+        // Get email from input field / E-Mail aus Eingabefeld abrufen
+        const email = document.getElementById("registerEmail").value;
+        // Get password from input field / Passwort aus Eingabefeld abrufen
+        const password = document.getElementById("registerPassword").value;
+
+        // Validate input fields / Eingabefelder validieren
+        if (!email || !password) {
+          showMessage("Please enter email and password", "error");
+          return; // Exit function if validation fails / Funktion beenden, wenn Validierung fehlschlägt
+        }
+
+        try {
+          // Send POST request to register endpoint / POST-Anfrage an Registrierungs-Endpunkt senden
+          const response = await fetch(`${API_BASE}/users`, {
+            method: "POST", // HTTP POST method / HTTP-POST-Methode
+            headers: { "Content-Type": "application/json" }, // JSON content type / JSON-Inhaltstyp
+            body: JSON.stringify({ email, password }), // Convert data to JSON / Daten in JSON konvertieren
+          });
+
+          // Check if request was successful / Prüfen, ob Anfrage erfolgreich war
+          if (response.ok) {
+            showMessage("Registration successful! Please login.");
+            // Clear email input / E-Mail-Eingabe leeren
+            document.getElementById("registerEmail").value = "";
+            // Clear password input / Passwort-Eingabe leeren
+            document.getElementById("registerPassword").value = "";
+          } else {
+            // Get error message from response / Fehlermeldung aus Antwort abrufen
+            const error = await response.text();
+            showMessage(`Registration failed: ${error}`, "error");
+          }
+        } catch (error) {
+          // Handle network or other errors / Netzwerk- oder andere Fehler behandeln
+          showMessage(`Error: ${error.message}`, "error");
+        }
+      }
+
+      // Login / Anmelden
+      async function login() {
+        // Get email from input field / E-Mail aus Eingabefeld abrufen
+        const email = document.getElementById("loginEmail").value;
+        // Get password from input field / Passwort aus Eingabefeld abrufen
+        const password = document.getElementById("loginPassword").value;
+
+        // Validate input fields / Eingabefelder validieren
+        if (!email || !password) {
+          showMessage("Please enter email and password", "error");
+          return; // Exit function if validation fails / Funktion beenden, wenn Validierung fehlschlägt
+        }
+
+        try {
+          // Send POST request to login endpoint / POST-Anfrage an Login-Endpunkt senden
+          const response = await fetch(`${API_BASE}/auth/login`, {
+            method: "POST", // HTTP POST method / HTTP-POST-Methode
+            headers: { "Content-Type": "application/json" }, // JSON content type / JSON-Inhaltstyp
+            body: JSON.stringify({ email, password }), // Convert data to JSON / Daten in JSON konvertieren
+          });
+
+          // Check if login was successful / Prüfen, ob Anmeldung erfolgreich war
+          if (response.ok) {
+            // Parse JSON response / JSON-Antwort parsen
+            const data = await response.json();
+            // Store JWT token / JWT-Token speichern
+            token = data.access_token;
+            // Store user data / Benutzerdaten speichern
+            currentUser = data.user;
+            // Save token to localStorage / Token in localStorage speichern
+            localStorage.setItem("token", token);
+            // Save user to localStorage as JSON / Benutzer als JSON in localStorage speichern
+            localStorage.setItem("user", JSON.stringify(currentUser));
+            showMessage("Login successful!");
+            // Update UI to show logged in state / UI aktualisieren, um angemeldeten Zustand anzuzeigen
+            updateAuthUI();
+            // Clear email input / E-Mail-Eingabe leeren
+            document.getElementById("loginEmail").value = "";
+            // Clear password input / Passwort-Eingabe leeren
+            document.getElementById("loginPassword").value = "";
+            // Load quotes after login / Zitate nach Anmeldung laden
+            loadQuotes();
+          } else {
+            showMessage("Login failed: Invalid credentials", "error");
+          }
+        } catch (error) {
+          // Handle network or other errors / Netzwerk- oder andere Fehler behandeln
+          showMessage(`Error: ${error.message}`, "error");
+        }
+      }
+
+      // Logout / Abmelden
+      function logout() {
+        // Clear token variable / Token-Variable leeren
+        token = null;
+        // Clear current user variable / Aktuellen Benutzer-Variable leeren
+        currentUser = null;
+        // Remove token from localStorage / Token aus localStorage entfernen
+        localStorage.removeItem("token");
+        // Remove user from localStorage / Benutzer aus localStorage entfernen
+        localStorage.removeItem("user");
+        // Update UI to show logged out state / UI aktualisieren, um abgemeldeten Zustand anzuzeigen
+        updateAuthUI();
+        showMessage("Logged out successfully");
+        // Clear quotes list / Zitatliste leeren
+        document.getElementById("quotesList").innerHTML = "";
+        // Clear users list / Benutzerliste leeren
+        document.getElementById("usersList").innerHTML = "";
+      }
+
+      // Load quotes (public) / Zitate laden (öffentlich)
+      async function loadQuotes() {
+        try {
+          // Send GET request to quotes endpoint / GET-Anfrage an Zitate-Endpunkt senden
+          const response = await fetch(`${API_BASE}/quotes`);
+          // Parse JSON response / JSON-Antwort parsen
+          const quotes = await response.json();
+
+          // Get quotes list container / Zitatlisten-Container abrufen
+          const quotesList = document.getElementById("quotesList");
+          // Clear existing content / Vorhandenen Inhalt leeren
+          quotesList.innerHTML = "";
+
+          // Loop through each quote / Durch jedes Zitat iterieren
+          quotes.forEach((quote) => {
+            // Create div element for quote / Div-Element für Zitat erstellen
+            const div = document.createElement("div");
+            // Set CSS class / CSS-Klasse setzen
+            div.className = "item";
+            // Set HTML content with quote data / HTML-Inhalt mit Zitatdaten setzen
+            div.innerHTML = `
+                        <h3>"${quote.text}"</h3>
+                        <p><strong>Author:</strong> ${quote.author}</p>
+                        <p><small>ID: ${quote.id}</small></p>
+                        ${
+                          token
+                            ? `
+                            <div class="item-actions">
+                                <button onclick="deleteQuote(${quote.id})" class="danger">Delete</button>
+                            </div>
+                        `
+                            : ""
+                        }
+                    `;
+            // Append quote to list / Zitat an Liste anhängen
+            quotesList.appendChild(div);
+          });
+        } catch (error) {
+          // Handle errors / Fehler behandeln
+          showMessage(`Error loading quotes: ${error.message}`, "error");
+        }
+      }
+
+      // Create quote (requires auth) / Zitat erstellen (erfordert Authentifizierung)
+      async function createQuote() {
+        // Check if user is authenticated / Prüfen, ob Benutzer authentifiziert ist
+        if (!token) {
+          showMessage("Please login to create quotes", "error");
+          return; // Exit if not authenticated / Beenden, wenn nicht authentifiziert
+        }
+
+        // Get quote text from input / Zitattext aus Eingabe abrufen
+        const text = document.getElementById("quoteText").value;
+        // Get author from input / Autor aus Eingabe abrufen
+        const author = document.getElementById("quoteAuthor").value;
+
+        // Validate input fields / Eingabefelder validieren
+        if (!text || !author) {
+          showMessage("Please enter quote text and author", "error");
+          return; // Exit if validation fails / Beenden, wenn Validierung fehlschlägt
+        }
+
+        try {
+          // Send POST request with JWT token / POST-Anfrage mit JWT-Token senden
+          const response = await fetch(`${API_BASE}/quotes`, {
+            method: "POST", // HTTP POST method / HTTP-POST-Methode
+            headers: {
+              "Content-Type": "application/json", // JSON content type / JSON-Inhaltstyp
+              Authorization: `Bearer ${token}`, // JWT token in header / JWT-Token im Header
+            },
+            body: JSON.stringify({ text, author }), // Convert data to JSON / Daten in JSON konvertieren
+          });
+
+          // Check if request was successful / Prüfen, ob Anfrage erfolgreich war
+          if (response.ok) {
+            showMessage("Quote created successfully!");
+            // Clear text input / Texteingabe leeren
+            document.getElementById("quoteText").value = "";
+            // Clear author input / Autor-Eingabe leeren
+            document.getElementById("quoteAuthor").value = "";
+            // Reload quotes list / Zitatliste neu laden
+            loadQuotes();
+          } else {
+            // Get error message from response / Fehlermeldung aus Antwort abrufen
+            const error = await response.text();
+            showMessage(`Failed to create quote: ${error}`, "error");
+          }
+        } catch (error) {
+          // Handle network or other errors / Netzwerk- oder andere Fehler behandeln
+          showMessage(`Error: ${error.message}`, "error");
+        }
+      }
+
+      // Delete quote (requires auth) / Zitat löschen (erfordert Authentifizierung)
+      async function deleteQuote(id) {
+        // Check if user is authenticated / Prüfen, ob Benutzer authentifiziert ist
+        if (!token) {
+          showMessage("Please login to delete quotes", "error");
+          return; // Exit if not authenticated / Beenden, wenn nicht authentifiziert
+        }
+
+        // Confirm deletion with user / Löschung mit Benutzer bestätigen
+        if (!confirm("Are you sure you want to delete this quote?")) {
+          return; // Exit if user cancels / Beenden, wenn Benutzer abbricht
+        }
+
+        try {
+          // Send DELETE request with JWT token / DELETE-Anfrage mit JWT-Token senden
+          const response = await fetch(`${API_BASE}/quotes/${id}`, {
+            method: "DELETE", // HTTP DELETE method / HTTP-DELETE-Methode
+            headers: {
+              Authorization: `Bearer ${token}`, // JWT token in header / JWT-Token im Header
+            },
+          });
+
+          // Check if request was successful / Prüfen, ob Anfrage erfolgreich war
+          if (response.ok) {
+            showMessage("Quote deleted successfully!");
+            // Reload quotes list / Zitatliste neu laden
+            loadQuotes();
+          } else {
+            showMessage("Failed to delete quote", "error");
+          }
+        } catch (error) {
+          // Handle network or other errors / Netzwerk- oder andere Fehler behandeln
+          showMessage(`Error: ${error.message}`, "error");
+        }
+      }
+
+      // Load users (requires auth) / Benutzer laden (erfordert Authentifizierung)
+      async function loadUsers() {
+        // Check if user is authenticated / Prüfen, ob Benutzer authentifiziert ist
+        if (!token) {
+          showMessage("Please login to view users", "error");
+          return; // Exit if not authenticated / Beenden, wenn nicht authentifiziert
+        }
+
+        try {
+          // Send GET request with JWT token / GET-Anfrage mit JWT-Token senden
+          const response = await fetch(`${API_BASE}/users`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // JWT token in header / JWT-Token im Header
+            },
+          });
+
+          // Check if request was successful / Prüfen, ob Anfrage erfolgreich war
+          if (response.ok) {
+            // Parse JSON response / JSON-Antwort parsen
+            const users = await response.json();
+
+            // Get users list container / Benutzerlisten-Container abrufen
+            const usersList = document.getElementById("usersList");
+            // Clear existing content / Vorhandenen Inhalt leeren
+            usersList.innerHTML = "";
+
+            // Loop through each user / Durch jeden Benutzer iterieren
+            users.forEach((user) => {
+              // Create div element for user / Div-Element für Benutzer erstellen
+              const div = document.createElement("div");
+              // Set CSS class / CSS-Klasse setzen
+              div.className = "item";
+              // Set HTML content with user data / HTML-Inhalt mit Benutzerdaten setzen
+              div.innerHTML = `
+                            <h3>${user.email}</h3>
+                            <p><strong>ID:</strong> ${user.id}</p>
+                            <p><strong>Created:</strong> ${new Date(
+                              user.createdAt
+                            ).toLocaleString()}</p>
+                        `;
+              // Append user to list / Benutzer an Liste anhängen
+              usersList.appendChild(div);
+            });
+            showMessage(`Loaded ${users.length} users`);
+          } else {
+            showMessage("Failed to load users", "error");
+          }
+        } catch (error) {
+          // Handle network or other errors / Netzwerk- oder andere Fehler behandeln
+          showMessage(`Error: ${error.message}`, "error");
+        }
+      }
+
+      // Initialize / Initialisieren
+      // Update UI on page load / UI beim Seitenladen aktualisieren
+      updateAuthUI();
+      // Load quotes on page load / Zitate beim Seitenladen laden
+      loadQuotes();
+    </script>
+  </body>
+</html>
